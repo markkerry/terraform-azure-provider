@@ -46,7 +46,7 @@ resource "azurerm_public_ip" "pip" {
 
 # create the nsg
 resource "azurerm_network_security_group" "nsg" {
-  name                = "nsg1"
+  name                = "${var.prefix}-nsg"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -65,9 +65,9 @@ resource "azurerm_network_security_group" "nsg" {
 
 # associate the ngg with the nics
 resource "azurerm_network_interface_security_group_association" "nsgassoc" {
-    count = var.instance_count
-    network_interface_id      = element(azurerm_network_interface.nics.*.id, count.index)
-    network_security_group_id = azurerm_network_security_group.nsg.id
+  count = var.instance_count
+  network_interface_id      = element(azurerm_network_interface.nics.*.id, count.index)
+  network_security_group_id = azurerm_network_security_group.nsg.id
 }
 
 # create the vms
